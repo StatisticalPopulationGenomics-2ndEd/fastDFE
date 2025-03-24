@@ -3,7 +3,7 @@ Annotation of recombination intensity.
 """
 import fastdfe as fd
 
-from workflow.scripts.utils import RecombinationIntensityAnnotation
+from scripts.utils import RecombinationIntensityAnnotation
 
 ann = fd.Annotator(
     annotations=[RecombinationIntensityAnnotation('recombination_map.csv', 'recombination_bins.csv')],

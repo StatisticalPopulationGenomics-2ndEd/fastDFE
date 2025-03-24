@@ -39,6 +39,7 @@ S_d = {k: v.bootstraps.mean()['S_d'] for k, v in inf.marginal_inferences.items()
 plt.bar(S_d.keys(), np.abs(list(S_d.values())))
 plt.ylabel('$S_d$')
 plt.xlabel('Recombination intensity bin')
+plt.title('Marginal inferences')
 plt.tight_layout()
 plt.show()
 
@@ -46,6 +47,7 @@ S_d = {k: v.bootstraps.mean()['S_d'] for k, v in inf.joint_inferences.items() if
 plt.bar(S_d.keys(), np.abs(list(S_d.values())))
 plt.ylabel('$S_d$')
 plt.xlabel('Recombination intensity bin')
+plt.title('Joint inferences')
 plt.tight_layout()
 plt.show()
 

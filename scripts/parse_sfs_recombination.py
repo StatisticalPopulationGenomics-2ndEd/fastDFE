@@ -6,7 +6,7 @@ import matplotlib as mpl
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from workflow.scripts.utils import RecombinationIntensityStratification, RecombinationIntensityAnnotation
+from scripts.utils import RecombinationIntensityStratification, RecombinationIntensityAnnotation
 
 mpl.rcParams['figure.figsize'] = [8, 3]
 
@@ -46,6 +46,8 @@ p = fd.Parser(
 spectra: fd.Spectra = p.parse()
 spectra.to_file('sfs.rho.csv')
 spectra.plot()
+
+p.annotations[0].plot_histogram(file="rho.hist.png")
 
 spectra.plot(show=False)
 plt.legend(ncol=2, fontsize=8)

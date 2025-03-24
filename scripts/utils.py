@@ -7,6 +7,7 @@ import fastdfe as fd
 import numpy as np
 import pandas as pd
 from fastdfe.io_handlers import DummyVariant
+from matplotlib import pyplot as plt
 
 
 class RecombinationIntensityAnnotation(fd.Annotation):
@@ -72,6 +73,27 @@ class RecombinationIntensityAnnotation(fd.Annotation):
             if mask.any():
                 self.current = chr_map[mask].iloc[0]
                 self.annotate_site(variant)
+
+    def plot_histogram(self, show: bool = True, file: str = None):
+        """
+        Plot histogram of recombination intensity values.
+
+        :param show: Show the plot.
+        :param file: Save the plot to a file.
+        """
+        edges = [0] + list(np.logspace(-6, 2, 30))
+        hist, _ = np.histogram(self.values, bins=edges)
+        plt.bar(edges[:-1], hist, width=np.diff(edges), align='edge')
+        plt.xlabel("Recombination intensity (cM/Mb)")
+        plt.ylabel("Frequency")
+        plt.xscale('log')
+        plt.tight_layout()
+
+        if file is not None:
+            plt.savefig(file)
+
+        if show:
+            plt.show()
 
 
 class RecombinationIntensityStratification(fd.Stratification):
