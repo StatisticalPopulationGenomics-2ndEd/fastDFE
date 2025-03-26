@@ -1,0 +1,283 @@
+"""
+Snakemake workflow
+Note that input and output file names are hard-coded in the script.
+"""
+
+
+def get_cmd(name: str) -> str:
+    """
+    Get the command to run a script and log the output.
+
+    :param name: Name of the script.
+    :return: shell command.
+    """
+    return f"cd data && python ../workflow/scripts/{name}.py 2> >(tee ../logs/{name}.log >&2)"
+
+
+rule all:
+    input:
+        (
+            "data/sfs.plain.png",
+            "data/sfs.unfolded.png",
+            "data/sfs.unfolded.deg.png",
+            "data/sfs.chr.png",
+            "data/sfs.png",
+            "data/sfs.rho.png",
+            "data/sfs.random.png",
+            "data/nested_models.png",
+            "data/dfe_discretized.png",
+            "data/sfs_comparison.png",
+            "data/dfe_parametrizations.png",
+            "data/dfe_discretized.joint.png",
+            "data/dfe_discretized.covariates.png",
+            "data/marginal_inferences.covariates.png",
+            "data/joint_inferences.covariates.png",
+            "data/lrt_covariates.png",
+            "data/dfe_discretized.random.png",
+            "data/marginal_inferences.random.png",
+            "data/joint_inferences.random.png",
+            "data/lrt_covariates.random.png"
+        )
+
+# Filter VCF file to retain only 0 and 4-fold degenerate sites.
+rule filter_vcf_degeneracy:
+    input:
+        vcf="data/hgdp.raw.vcf.gz",
+        gff="data/hg38.gff3.gz",
+        fasta="data/hg38.fasta.gz",
+    output:
+        annotated="data/hgdp.raw.deg.vcf.gz",
+        filtered="data/hgdp.vcf.gz"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("filter_vcf_degeneracy")
+
+# Filter VCF file to keep only SNPs and human samples.
+rule filter_vcf_snps:
+    input:
+        vcf="data/hgdp.vcf.gz"
+    output:
+        vcf="data/hgdp.snps.vcf.gz"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("filter_vcf_snps")
+
+# Annotate the ancestral allele of human samples in the HGDP dataset.
+rule annotate_ancestral_allele:
+    input:
+        vcf="data/hgdp.vcf.gz",
+        fasta="data/hg38.fasta.gz",
+        samples="data/samples.csv"
+    output:
+        vcf="data/hgdp.anc.vcf.gz",
+        json="data/anc.json"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("annotate_ancestral_allele")
+
+# Annotation of degeneracy for the HGDP dataset.
+rule annotate_degeneracy:
+    input:
+        vcf="data/hgdp.anc.vcf.gz",
+        gff="data/hg38.gff3.gz",
+        fasta="data/hg38.fasta.gz"
+    output:
+        vcf="data/hgdp.anc.deg.vcf.gz"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("annotate_degeneracy")
+
+# Annotation of recombination intensity.
+rule annotate_recombination_intensity:
+    input:
+        vcf="data/hgdp.anc.deg.vcf.gz",
+        gff="data/hg38.gff3.gz",
+        fasta="data/hg38.fasta.gz",
+        map="data/rho_map.csv"
+    output:
+        vcf="data/hgdp.anc.deg.rho.vcf.gz",
+        bins="data/rho_bins.csv"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("annotate_recombination_intensity")
+
+# Parse unstratified SFS.
+rule parse_sfs_plain:
+    input:
+        vcf="data/hgdp.vcf.gz",
+        samples="data/samples.csv"
+    output:
+        sfs="data/sfs.plain.csv",
+        plot="data/sfs.plain.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("parse_sfs_plain")
+
+# Parse unfolded SFS.
+rule parse_sfs_unfolded:
+    input:
+        vcf="data/hgdp.anc.vcf.gz",
+        samples="data/samples.csv"
+    output:
+        sfs="data/sfs.unfolded.csv",
+        plot="data/sfs.unfolded.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("parse_sfs_unfolded")
+
+# Parse unfolded site frequency spectra with degeneracy stratification
+rule parse_sfs_unfolded_deg:
+    input:
+        vcf="data/hgdp.anc.deg.vcf.gz",
+        samples="data/samples.csv"
+    output:
+        sfs="data/sfs.unfolded.deg.csv",
+        plot="data/sfs.unfolded.deg.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("parse_sfs_unfolded_deg")
+
+# Parse SFS for chromosome 1 and 2
+rule parse_sfs_chr:
+    input:
+        vcf="data/hgdp.anc.deg.vcf.gz",
+        fasta="data/hg38.fasta.gz",
+        gff="data/hg38.gff3.gz",
+        samples="data/samples.csv"
+    output:
+        sfs="data/sfs.chr.csv",
+        plot="data/sfs.chr.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("parse_sfs_chr")
+
+# Parse SFS including monomorphic site counts.
+rule parse_sfs_complete:
+    input:
+        vcf="data/hgdp.anc.deg.vcf.gz",
+        fasta="data/hg38.fasta.gz",
+        gff="data/hg38.gff3.gz",
+        samples="data/samples.csv"
+    output:
+        sfs="data/sfs.csv",
+        plot="data/sfs.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("parse_sfs_complete")
+
+# Parse SFS with recombination intensity stratification.
+rule parse_sfs_recombination:
+    input:
+        vcf="data/hgdp.anc.deg.rho.vcf.gz",
+        fasta="data/hg38.fasta.gz",
+        gff="data/hg38.gff3.gz",
+        map="data/rho_map.csv",
+        bins="data/rho_bins.csv",
+        samples="data/samples.csv"
+    output:
+        sfs="data/sfs.rho.csv",
+        plot="data/sfs.rho.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("parse_sfs_recombination")
+
+# Parse the SFS using random stratification.
+rule parse_sfs_random:
+    input:
+        vcf="data/hgdp.anc.deg.rho.vcf.gz",
+        gff="data/hg38.gff3.gz",
+        fasta="data/hg38.fasta.gz",
+        samples="data/samples.csv"
+    output:
+        sfs="data/sfs.random.csv",
+        plot="data/sfs.random.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("parse_sfs_random")
+
+# Compare nested models.
+rule compare_nested:
+    input:
+        sfs="data/sfs.csv"
+    output:
+        plot="data/nested_models.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("compare_nested")
+
+# Infer DFE.
+rule infer_dfe:
+    input:
+        sfs="data/sfs.csv"
+    output:
+        discretized="data/dfe_discretized.png",
+        comparison="data/sfs_comparison.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("infer_dfe")
+
+# Compare the different DFE parametrizations.
+rule compare_parametrization:
+    input:
+        sfs="data/sfs.csv"
+    output:
+        plot="data/dfe_parametrizations.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("compare_parametrization")
+
+# Infer joint DFE.
+rule infer_joint_dfe:
+    input:
+        sfs="data/sfs.chr.csv"
+    output:
+        discretized="data/dfe_discretized.joint.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("infer_joint_dfe")
+
+# Infer covariate DFE.
+rule infer_covariate_dfe:
+    input:
+        sfs="data/sfs.rho.csv",
+        bins="data/rho_bins.csv"
+    output:
+        discretized="data/dfe_discretized.covariates.png",
+        marginal="data/marginal_inferences.covariates.png",
+        joint="data/joint_inferences.covariates.png",
+        covariates="data/lrt_covariates.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("infer_covariate_dfe")
+
+# Infer random DFE.
+rule infer_random_dfe:
+    input:
+        sfs="data/sfs.random.csv",
+        bins="data/rho_bins.csv"
+    output:
+        discretized="data/dfe_discretized.random.png",
+        marginal="data/marginal_inferences.random.png",
+        joint="data/joint_inferences.random.png",
+        covariates="data/lrt_covariates.random.png"
+    conda:
+        "envs/base.yaml"
+    shell:
+        get_cmd("infer_random_dfe")
