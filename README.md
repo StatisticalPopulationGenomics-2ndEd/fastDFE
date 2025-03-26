@@ -1,4 +1,10 @@
 # fastDFE  <img align="right" width="100" src="https://raw.githubusercontent.com/Sendrowski/fastDFE/master/docs/logo.png">
-Supplementary material for book chapter on fastDFE.
+Supplementary material for book chapter on `fastDFE`.
 
-For further details, please refer to the project’s [GitHub repository](https://github.com/Sendrowski/fastDFE).
+### Summary
+- [`data/`](data/): Input and output files used in the chapter
+- [`workflow/scripts/`](workflow/scripts/): Code snippets used in the chapter
+- [`workflow/envs/base.yaml`](workflow/envs/base.yaml): `fastDFE` Conda environment
+- [`workflow/Snakefile`](workflow/Snakefile): Pseudo-Snakemake workflow
+
+For further details, please refer to the `fastDFE`’s [GitHub repository](https://github.com/Sendrowski/fastDFE).
