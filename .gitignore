@@ -1,3 +1,7 @@
 .snakemake/
 .idea/
 scratch/
+logs/
+data/anc.json
+data/hg38.fasta
+data/hg38.gff3
