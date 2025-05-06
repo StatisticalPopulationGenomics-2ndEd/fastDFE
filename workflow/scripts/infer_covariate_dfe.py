@@ -12,7 +12,7 @@ mpl.rcParams['figure.dpi'] = 500
 
 spectra = fd.Spectra.from_file('sfs.rho.csv')
 bins = pd.read_csv('rho_bins.csv').iloc[:, 1].to_numpy()
-values = np.log((bins[:-1] + bins[1:]) / 2)
+values = np.log10((bins[:-1] + bins[1:]) / 2)
 types = spectra.merge_groups(level=1).types
 covariate = fd.Covariate('S_d', dict(zip(types, values)))
 
