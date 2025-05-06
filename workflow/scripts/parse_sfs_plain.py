@@ -25,6 +25,9 @@ sfs: fd.Spectra = p.parse()
 # sfs.fold().plot()  # plot folded spectrum
 
 sfs.fold().plot(show=False)
+plt.xlabel('minor allele frequency')
+plt.ylabel('number of variants')
+plt.tight_layout()
 plt.savefig("sfs.plain.png")
 sfs.to_file('sfs.plain.csv')
 

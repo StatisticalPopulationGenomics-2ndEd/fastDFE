@@ -26,6 +26,9 @@ sfs: fd.Spectra = p.parse()
 # sfs.plot()
 
 sfs.plot(show=False)
+plt.xlabel('derived allele frequency')
+plt.ylabel('number of variants')
+plt.tight_layout()
 plt.savefig("sfs.unfolded.deg.png")
 sfs.to_file("sfs.unfolded.deg.csv")
 
