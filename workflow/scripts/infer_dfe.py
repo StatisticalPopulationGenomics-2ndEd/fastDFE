@@ -23,7 +23,7 @@ inf.plot_discretized(show=False)
 plt.savefig('dfe_discretized.png')
 
 inf.plot_sfs_comparison(show=False)
-plt.xlabel('minor allele frequency')
+plt.xlabel('derived allele frequency')
 plt.ylabel('number of variants')
 plt.tight_layout()
 plt.savefig('sfs_comparison.png')
