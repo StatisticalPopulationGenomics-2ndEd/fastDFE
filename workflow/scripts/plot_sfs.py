@@ -10,7 +10,7 @@ mpl.rcParams['figure.dpi'] = 500
 
 sfs = fd.Spectra.from_file('sfs.rho.csv')
 sfs.plot(show=False)
-plt.xlabel('minor allele frequency')
+plt.xlabel('derived allele frequency')
 plt.ylabel('number of variants')
 plt.legend(ncol=2, fontsize=8)
 plt.tight_layout(pad=2)

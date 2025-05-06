@@ -33,6 +33,7 @@ inf.plot_discretized(show=False)
 plt.legend(ncol=2, fontsize=7)
 plt.tight_layout()
 plt.savefig('dfe_discretized.covariates.png', bbox_inches='tight')
+plt.clf()
 
 c0 = inf.bootstraps.mean()['bin0.c0']
 print(f'c0: {c0}')
@@ -44,6 +45,7 @@ plt.xlabel('Recombination intensity bin')
 plt.title('Marginal inferences')
 plt.tight_layout()
 plt.savefig('marginal_inferences.covariates.png')
+plt.clf()
 
 S_d = {k: v.bootstraps.mean()['S_d'] for k, v in inf.joint_inferences.items() if k != 'all'}
 plt.bar(S_d.keys(), np.abs(list(S_d.values())))
@@ -52,6 +54,7 @@ plt.xlabel('Recombination intensity bin')
 plt.title('Joint inferences')
 plt.tight_layout()
 plt.savefig('joint_inferences.covariates.png')
+plt.clf()
 
 mpl.rcParams['figure.figsize'] = [9, 3.3]
 p = inf.perform_lrt_covariates()
