@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-mpl.rcParams['figure.figsize'] = [8, 3.8]
+mpl.rcParams['figure.figsize'] = [8, 3.35]
 mpl.rcParams['figure.dpi'] = 500
 
 spectra = fd.Spectra.from_file('sfs.rho.csv')
@@ -31,7 +31,8 @@ inf = fd.JointInference(
 inf.run()
 inf.plot_discretized(show=False)
 plt.legend(ncol=2, fontsize=7)
-plt.savefig('dfe_discretized.covariates.png')
+plt.tight_layout()
+plt.savefig('dfe_discretized.covariates.png', bbox_inches='tight')
 
 c0 = inf.bootstraps.mean()['bin0.c0']
 print(f'c0: {c0}')

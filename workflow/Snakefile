@@ -1,6 +1,6 @@
 """
 Snakemake workflow
-Note that input and output file names are hard-coded in the script.
+Note that input and output file names are hard-coded in the scripts.
 """
 
 

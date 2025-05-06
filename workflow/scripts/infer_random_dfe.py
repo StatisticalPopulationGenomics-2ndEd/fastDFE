@@ -31,7 +31,8 @@ inf = fd.JointInference(
 inf.run()
 inf.plot_discretized(show=False)
 plt.legend(ncol=2, fontsize=7)
-plt.savefig('dfe_discretized.random.png')
+plt.tight_layout()
+plt.savefig('dfe_discretized.random.png', bbox_inches='tight')
 
 c0 = inf.bootstraps.mean()['bin0.c0']
 print(f'c0: {c0}')
