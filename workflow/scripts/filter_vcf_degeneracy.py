@@ -1,5 +1,5 @@
 """
-Filter VCF file to retain only 0 and 4-fold degenerate sites.
+Filter VCF file to retain only 0, 2 and 4-fold degenerate sites.
 """
 import fastdfe as fd
 from cyvcf2 import Reader, Writer
