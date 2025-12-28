@@ -14,10 +14,8 @@ spectra = fd.Spectra.from_file('sfs.chr.csv')
 inf = fd.JointInference(
     sfs_neut=spectra['neutral.*'].rename(['chr1', 'chr2']),
     sfs_sel=spectra['selected.*'].rename(['chr1', 'chr2']),
-    fixed_params={'all': {'eps': 0, 'p_b': 0, 'S_b': 1}},
-    shared_params=[fd.SharedParams(types=['chr1', 'chr2'], params=['S_d'])],
-    do_bootstrap=True,
-    n_bootstraps=100
+    fixed_params={'all': {'h': 0.5, 'eps': 0, 'p_b': 0, 'S_b': 1}},
+    shared_params=[fd.SharedParams(types=['chr1', 'chr2'], params=['S_d'])]
 )
 
 inf.run()
@@ -31,10 +29,8 @@ print(f'p-value (deleterious DFE, shared S_d): {p}')
 inf = fd.JointInference(
     sfs_neut=spectra['neutral.*'].rename(['chr1', 'chr2']),
     sfs_sel=spectra['selected.*'].rename(['chr1', 'chr2']),
-    fixed_params={'all': {'eps': 0}},
-    shared_params=[fd.SharedParams(types=['chr1', 'chr2'], params=['S_d'])],
-    do_bootstrap=True,
-    n_bootstraps=100
+    fixed_params={'all': {'h': 0.5, 'eps': 0}},
+    shared_params=[fd.SharedParams(types=['chr1', 'chr2'], params=['S_d'])]
 )
 
 inf.run()
@@ -45,10 +41,8 @@ print(f'p-value (full DFE, shared S_d): {p1}')
 inf = fd.JointInference(
     sfs_neut=spectra['neutral.*'].rename(['chr1', 'chr2']),
     sfs_sel=spectra['selected.*'].rename(['chr1', 'chr2']),
-    fixed_params={'all': {'eps': 0, 'p_b': 0, 'S_b': 1}},
-    shared_params=[fd.SharedParams(types=['chr1', 'chr2'], params=['b'])],
-    do_bootstrap=True,
-    n_bootstraps=100
+    fixed_params={'all': {'h': 0.5, 'eps': 0, 'p_b': 0, 'S_b': 1}},
+    shared_params=[fd.SharedParams(types=['chr1', 'chr2'], params=['b'])]
 )
 inf.run()
 

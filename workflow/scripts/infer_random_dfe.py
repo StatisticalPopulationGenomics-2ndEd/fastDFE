@@ -21,11 +21,11 @@ pass
 inf = fd.JointInference(
     sfs_neut=spectra['neutral.*'].merge_groups(level=1),
     sfs_sel=spectra['selected.*'].merge_groups(level=1),
-    fixed_params={'all': {'eps': 0, 'p_b': 0, 'S_b': 1}},
+    fixed_params={'all': {'h': 0.5, 'eps': 0, 'p_b': 0, 'S_b': 1}},
     shared_params=[fd.SharedParams(['b', 'S_d'])],
     covariates=[covariate],
-    do_bootstrap=True,
-    n_bootstraps=100
+    n_bootstrap_retries=10,
+    n_runs=100
 )
 
 inf.run()
@@ -33,28 +33,32 @@ inf.plot_discretized(show=False)
 plt.legend(ncol=2, fontsize=7)
 plt.tight_layout()
 plt.savefig('dfe_discretized.random.png', bbox_inches='tight')
+plt.clf()
 
-c0 = inf.bootstraps.mean()['bin0.c0']
+c0 = inf.bootstraps.select_dtypes('number').mean()['bin0.c0']
 print(f'c0: {c0}')
 
-S_d = {k: v.bootstraps.mean()['S_d'] for k, v in inf.marginal_inferences.items() if k != 'all'}
+S_d = {k: v.bootstraps.select_dtypes('number').mean()['S_d'] for k, v in inf.marginal_inferences.items() if k != 'all'}
 plt.bar(S_d.keys(), np.abs(list(S_d.values())))
 plt.ylabel('$S_d$')
 plt.xlabel('Recombination intensity bin')
 plt.title('Marginal inferences')
 plt.tight_layout()
 plt.savefig('marginal_inferences.random.png')
+plt.clf()
 
-S_d = {k: v.bootstraps.mean()['S_d'] for k, v in inf.joint_inferences.items() if k != 'all'}
+S_d = {k: v.bootstraps.select_dtypes('number').mean()['S_d'] for k, v in inf.joint_inferences.items() if k != 'all'}
 plt.bar(S_d.keys(), np.abs(list(S_d.values())))
 plt.ylabel('$S_d$')
 plt.xlabel('Recombination intensity bin')
 plt.title('Joint inferences')
 plt.tight_layout()
 plt.savefig('joint_inferences.random.png')
+plt.clf()
 
 mpl.rcParams['figure.figsize'] = [8, 3]
 p = inf.perform_lrt_covariates()
+print(f'p-value: {p}')
 inf.plot_covariate(show=False)
 plt.savefig('lrt_covariates.random.png')
 

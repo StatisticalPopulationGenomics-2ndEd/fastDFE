@@ -13,14 +13,13 @@ spectra = fd.Spectra.from_file('sfs.csv')
 inf = fd.BaseInference(
     sfs_neut=spectra['neutral'],
     sfs_sel=spectra['selected'],
-    do_bootstrap=True
+    fixed_params={'all': {'h': 0.5}}
 )
 
 inf_sub = fd.BaseInference(
     sfs_neut=spectra['neutral'],
     sfs_sel=spectra['selected'],
-    do_bootstrap=True,
-    fixed_params={'all': {'eps': 0}}
+    fixed_params={'all': {'h': 0.5, 'eps': 0}}
 )
 
 p1 = inf_sub.compare_nested(inf)
@@ -30,7 +29,8 @@ p2 = fd.BaseInference(
     sfs_neut=spectra['neutral'],
     sfs_sel=spectra['selected'],
     do_bootstrap=True,
-    fixed_params={'all': {'p_b': 0, 'S_b': 1}}
+    parallelize=False,
+    fixed_params={'all': {'h': 0.5, 'p_b': 0, 'S_b': 1}}
 ).compare_nested(inf)
 print(f'p-value: {p2}')
 

@@ -22,8 +22,8 @@ parametrizations = [
 inferences = [fd.BaseInference(
     sfs_neut=spectra['neutral'],
     sfs_sel=spectra['selected'],
-    do_bootstrap=True,
-    model=p
+    fixed_params={'all': {'h': 0.5, 'eps': 0}},
+    model=p,
 ) for p in parametrizations]
 
 [inf.run() for inf in inferences]
