@@ -12,7 +12,10 @@ spectra = fd.Spectra.from_file('sfs.csv')
 
 inf = fd.BaseInference(
     sfs_neut=spectra['neutral'],
-    sfs_sel=spectra['selected']
+    sfs_sel=spectra['selected'],
+    fixed_params={'all': {'h': 0.5, 'eps': 0, 'p_b': 0, 'S_b': 1}},
+    n_runs=10,
+    n_bootstraps=100,
 )
 
 inf.run()

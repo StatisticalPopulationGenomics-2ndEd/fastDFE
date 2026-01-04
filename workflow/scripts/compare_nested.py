@@ -28,13 +28,9 @@ print(f'p-value: {p1}')
 p2 = fd.BaseInference(
     sfs_neut=spectra['neutral'],
     sfs_sel=spectra['selected'],
-    do_bootstrap=True,
-    parallelize=False,
     fixed_params={'all': {'h': 0.5, 'p_b': 0, 'S_b': 1}}
 ).compare_nested(inf)
 print(f'p-value: {p2}')
-
-# increase margin of plot by default 0.05
 
 inf.plot_nested_models(show=False)
 plt.savefig('nested_models.png')

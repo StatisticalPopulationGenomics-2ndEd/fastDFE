@@ -5,4 +5,4 @@ dependencies:
   - python>=3.10,<3.13
   - pip
   - pip:
-      - fastdfe>=1.2.0
+      - fastdfe>=1.2.1

@@ -44,8 +44,8 @@ inf = fd.JointInference(
     fixed_params={'all': {'h': 0.5, 'eps': 0, 'p_b': 0, 'S_b': 1}},
     shared_params=[fd.SharedParams(types=['chr1', 'chr2'], params=['b'])]
 )
-inf.run()
 
+inf.run()
 p2 = inf.perform_lrt_shared()
 print(f'p-value (deleterious DFE, shared b): {p2}')
 
